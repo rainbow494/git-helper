@@ -1,0 +1,16 @@
+{
+  "name": "nw-demo",
+  "main": "index.html",
+  "window":{
+    "title": "git helper",
+    "position": "center",
+    "resizable": false,
+    "width": 500,
+    "height": 500,
+    "toolbar":false,
+    "frame": true
+  },
+  "scripts": {
+    "start": "nw ."
+  }
+}

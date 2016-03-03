@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            margin: 0;
+        }
+        .screen{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: black;
+        }
+
+        button{
+            height: 30px;
+            width: 50vw;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <button type="button" onclick="onFetchRebaseClick()">fetch-rebase-all</button>
+        <button type="button" onclick="onLogClick()">log-all</button>
+    </div>
+    <script>
+    // 使用node.js获取系统平台
+    // var os = require('os')
+    // document.write('Our computer is: ', os.platform())
+    function onFetchRebaseClick() {
+        alert('fetch-rebase-all');
+    }
+
+    function onLogClick() {
+        alert('log all');
+    }
+
+    // var exec = require('child_process').exec,
+    // path = require('path'),
+    // os   = require('os');
+    // fs   = require('fs');
+
+    // // HACK: to make our calls to exec() testable,
+    // // support using a mock shell instead of a real shell
+    // var shell = process.env.SHELL || 'sh';
+
+    // // support for Win32 outside Cygwin
+    // if (os.platform() === 'win32' && process.env.SHELL === undefined) { 
+    //   shell = process.env.COMSPEC || 'cmd.exe';
+    // }
+
+    // // Merges the current environment variables and custom params for the environment used by child_process.exec()
+    // function createEnv(params) {
+    //     var env = {};
+    //     var item;
+
+    //     for (item in process.env) {
+    //         env[item] = process.env[item];
+    //     }
+
+    //     for(item in params) {
+    //         env[item] = params[item];
+    //     }
+
+    //     return env;
+    // }
+
+    // // scriptFile must be a full path to a shell script
+    // exports.exec = function (scriptFile, workingDirectory, environment, callback) {
+    //     var cmd;
+
+    //     if (!workingDirectory) {
+    //         callback(new Error('workingDirectory cannot be null'), null, null);
+    //     }
+
+    //     if (!fs.existsSync(workingDirectory)) {
+    //         callback(new Error('workingDirectory path not found - "' + workingDirectory + '"'), null, null);
+    //     }
+
+    //     if (scriptFile === null) {
+    //         callback(new Error('scriptFile cannot be null'), null, null);
+    //     }
+
+    //     if (!fs.existsSync(scriptFile)) {
+    //         callback(new Error('scriptFile file not found - "' + scriptFile + '"'), null, null);
+    //     }
+
+    //     // transform windows backslashes to forward slashes for use in cygwin on windows
+    //     if (path.sep === '\\') {
+    //         scriptFile = scriptFile.replace(/\\/g, '/');
+    //     }
+
+    //     // TODO: consider building the command line using a shell with the -c argument to run a command and exit
+    //     cmd = '"' + shell + '" "' + scriptFile + '"';
+
+    //     // execute script within given project workspace
+    //     exec(cmd,
+    //          {
+    //             cwd: workingDirectory,
+    //             env: createEnv(environment)
+    //          },
+    //         function (error, stdout, stderr) {
+    //             // TODO any optional processing before invoking the callback
+
+    //             callback(error, stdout, stderr);
+    //         }
+    //     );
+    // };
+    </script>
+</body>
+</html>
