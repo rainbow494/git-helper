@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            margin: 0;
+        }
+        .screen{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+
+        button{
+            border-radius: 5px;
+            width: 87vw;
+            height: 60px;
+            margin-bottom: 18px;
+            font-size: larger;
+        }
+
+        #output-panel{
+
+            border-radius: 5px;
+
+            width:87vw;
+            height:212px;
+            border: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <button type="button" onclick="onFetchRebaseClick()">Fetch Rebase All</button>
+        <button type="button" onclick="onLogClick()">Log All</button>
+        <textarea id="output-panel"></textarea>
+    </div>
+    <script>
+    function onFetchRebaseClick() {
+        callbat('fb.cmd');
+        document.getElementById("output-panel").value = '';
+    }
+
+    function onLogClick() {
+        callbat('log.cmd');
+        //document.getElementById("output-panel").value = '';
+    }
+
+    function callbat(filePath){
+        var exec = require('child_process').exec;
+        var child = exec(filePath, {cwd:'bat'});
+
+        child.stdout.on('data', function(data) {
+          console.log('stdout: ' + data);
+        });
+        child.stderr.on('data', function(data) {
+          console.log('stdout: ' + data);
+          document.getElementById("output-panel").value += data;
+
+        });
+        child.on('close', function(code) {
+          console.log('closing code: ' + code);
+        });
+    }
+
+    </script>
+</body>
+</html>

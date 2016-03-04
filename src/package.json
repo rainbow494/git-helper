@@ -1,14 +1,14 @@
 {
-  "name": "nw-demo",
-  "main": "index.html",
+  "name": "git-helper",
+  "main": "gui.html",
   "window":{
-    "title": "git helper",
+    "title": "Git Helper",
     "position": "center",
     "resizable": false,
     "width": 500,
     "height": 500,
-    "toolbar":false,
-    "frame": true
+    "frame": true,
+    "toolbar":false
   },
   "scripts": {
     "start": "nw ."
