@@ -39,7 +39,6 @@
         }
     </style>
     <script src="jquery.min.js"></script>
-    <!-- <script src="underscore.min.js"></script> -->
 </head>
 <body>
     <div class="screen">
@@ -52,7 +51,7 @@
 
         </div>
         <button type="button" onclick="onRunClick()">Run</button>
-        <textarea id="output-panel"></textarea>
+        <!-- <textarea id="output-panel"></textarea> -->
     </div>
     <script>
 
@@ -85,7 +84,6 @@
 
     function onRunClick() {
         $(".output-panel").value = '';
-        console.log('----------------------------');
 
         var projectPath = project[0];
         cmdSelected.map(function(idx, cmd) {
@@ -106,24 +104,11 @@
     }
 
     function execCmd(command, projectPath){
-        var exec = require('child_process').exec;
+        var execSync = require('child_process').execSync;
         var path = require('path');
         var execPath = path.relative(process.cwd(), projectPath);
 
-        console.log(command);
-        var child = exec(command, {cwd:execPath});
-
-        child.stdout.on('data', function(data) {
-          console.log('stdout: ' + data);
-        });
-        child.stderr.on('data', function(data) {
-          console.log('stdout: ' + data);
-          document.getElementById("output-panel").value += data;
-
-        });
-        child.on('close', function(code) {
-          console.log('closing code: ' + code);
-        });
+        var child = execSync(command, {cwd:execPath, encoding: 'utf-8'});
     }
 
     </script>
