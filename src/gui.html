@@ -15,12 +15,17 @@
             background-color: black;
         }
 
-        button{
+        .command-list button{
             border-radius: 5px;
-            width: 87vw;
+            //width: 87vw;
             height: 60px;
             margin-bottom: 18px;
             font-size: larger;
+        }
+
+        .command-list button.selected{
+            background-color: #0769ad;
+            color: white;
         }
 
         #output-panel{
@@ -33,27 +38,80 @@
             padding: 0;
         }
     </style>
+    <script src="jquery.min.js"></script>
+    <!-- <script src="underscore.min.js"></script> -->
 </head>
 <body>
     <div class="screen">
-        <button type="button" onclick="onFetchRebaseClick()">Fetch Rebase All</button>
-        <button type="button" onclick="onLogClick()">Log All</button>
+        <div class="command-list">
+            <button id="fetch" type="button" onclick="onCommandClick('fetch')">Fetch</button>
+            <button id="rebase" type="button" onclick="onCommandClick('rebase')">Rebase</button>
+            <button id="log" type="button" onclick="onCommandClick('log')">Log</button>
+        </div>
+        <div class="project-list">
+
+        </div>
+        <button type="button" onclick="onRunClick()">Run</button>
         <textarea id="output-panel"></textarea>
     </div>
     <script>
-    function onFetchRebaseClick() {
-        callbat('fb.cmd');
-        document.getElementById("output-panel").value = '';
+
+    var project = [
+        'f:\\github\\git-helper',
+        'f:\\github\\arch',
+        'f:\\github\\lunch'
+    ];
+
+    var cmdTemp = [
+        'log',
+        'fetch',
+        'rebase'
+    ];
+
+    var cmdSelected = [];
+
+    function onCommandClick(cmd) {
+        var btn = $('#' + cmd);
+        if (btn.hasClass('selected'))
+            btn.removeClass('selected');
+        else
+            btn.addClass('selected');
+
+        var $cmdList = $('.command-list .selected');
+        cmdSelected = $cmdList.map(function (idx, cmd) {
+            return cmd.id;
+        });
     }
 
-    function onLogClick() {
-        callbat('log.cmd');
-        //document.getElementById("output-panel").value = '';
+    function onRunClick() {
+        $(".output-panel").value = '';
+        console.log('----------------------------');
+
+        var projectPath = project[0];
+        cmdSelected.map(function(idx, cmd) {
+            if (cmd === "fetch")
+                fetch(projectPath);
+            else
+                execTortoiseGitProc(cmd, projectPath)
+        });
     }
 
-    function callbat(filePath){
+    function fetch(projectPath){
+        var command = 'git.exe fetch -v --progress "origin"'
+        execCmd(command, projectPath);
+    }
+
+    function execTortoiseGitProc(command, projectPath){
+        execCmd('tortoiseGitProc -command ' + command, projectPath)
+    }
+
+    function execCmd(command, projectPath){
         var exec = require('child_process').exec;
-        var child = exec(filePath, {cwd:'bat'});
+        var path = require('path');
+        var execPath = path.relative(process.cwd(), projectPath);
+
+        console.log(command);
+        var child = exec(command, {cwd:execPath});
 
         child.stdout.on('data', function(data) {
           console.log('stdout: ' + data);
