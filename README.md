@@ -1,7 +1,5 @@
 # Git-Helper
 
-
-
 ## 界面截图
 ![](https://github.com/rainbow494/git-helper/blob/master/screen-shot.png)
 
@@ -18,12 +16,14 @@
 ## 开发依赖
 - node-webkit
 
-## 打包运行方法
+## windows平台打包方法
 - 在[官网](http://nwjs.io/)下载SDK
-- 将src下project.config外所有文件, 压缩为zip文件后更名为git-helper.nw
-- 将git-helper.nw复制到nw.exe所在目录
-- 在命令行中执行 ```copy /b nw.exe+git-helper.nw git-helper.exe```建立exe文件
-- project.config修改后和exe一起复制到git所在盘符，点击exe执行命令
+- 将```src```下```project.config```外所有文件, ```压缩为zip文件```并更名为```git-helper.nw```
+- 将```git-helper.nw```复制到```SDK解压目录```
+- 打开命令行，进入```SDK解压目录```，执行```copy /b nw.exe+git-helper.nw git-helper.exe```建立exe文件
+- 将```src下project.config```，```git-helper.exe```以及SDK下的```icudtl.dat，libGLESv2.dll，nw.pak```一起复制到git所在盘符
+- 修改```project.cong```，点击exe执行命令
+- 其他平台打包方法[详见这里](https://github.com/nwjs/nw.js/wiki/how-to-package-and-distribute-your-apps)
 
 ## 调试方法
 - 打开```package.json``` 设置 ```toolbar:true```
@@ -34,4 +34,4 @@
 
 ## 参考资料
 - [node-webkit官方示例](https://github.com/nwjs/nw.js/wiki/Getting-Started-with-nw.js-for-simplified-Chinese%28%E5%BC%80%E5%A7%8Bnw.js%29)
-- [使用node-webkit创建桌面应用](http://www.html-js.com/article/Research-on-Hybrid-application-development-to-create-a-desktop-application-using-nodewebkit)
+- [用node-webkit把web应用打包成桌面应用](http://www.cnblogs.com/2050/p/3543011.html)

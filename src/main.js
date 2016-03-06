@@ -1,3 +1,5 @@
+var debug = false;
+
 var exec = require('child_process').exec;
 var path = require('path');
 var fs = require('fs');
@@ -32,8 +34,6 @@ function init() {
 function readProjectConfig(){
     var configPathTmp = 'project.config';
     var data = '';
-
-    var debug = false;
     if (debug) {
         configPath = configPathTmp;
     }
