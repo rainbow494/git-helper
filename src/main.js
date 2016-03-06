@@ -30,33 +30,27 @@ function init() {
 }
 
 function readProjectConfig(){
-
     var configPathTmp = 'project.config';
-
     var data = '';
-    // try {
-    //     var nwPath = process.execPath;
-    //     var nwDir = path.dirname(nwPath);
-    //     buildConfigPath = path.normalize(nwDir + '\\' + configPathTmp);
-    //     data = fs.readFileSync(buildConfigPath, 'utf8');
-    //     data.replace(/^\s+|\s+$/g,'').split('\r\n').map(function functionName(projectPath) {
-    //         projectTemp.push(path.normalize(projectPath));
-    //     });
-    // } catch (e) {
-    //     console.log(e);
-    // }
-    //
-    // if (projectTemp.length > 0)
-    //     return;
 
-    try {
-        data = fs.readFileSync('./project.config', 'utf8');
+    var debug = false;
+    if (debug) {
+        configPath = configPathTmp;
+    }
+    else {
+        var nwPath = process.execPath;
+        var nwDir = path.dirname(nwPath);
+        configPath = path.normalize(nwDir + '\\' + configPathTmp);
+    }
+
+    // try {
+        data = fs.readFileSync(configPath, 'utf8');
         data.replace(/^\s+|\s+$/g,'').split('\r\n').map(function functionName(projectPath) {
             projectTemp.push(path.normalize(projectPath));
         });
-    } catch (e) {
-        console.log(e);
-    }
+    // } catch (e) {
+    //     console.log(e);
+    // }
 }
 function onSelectProject(projectKey) {
     var item = $('#' + projectKey);

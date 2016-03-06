@@ -9,7 +9,7 @@
     "width": 500,
     "height": 500,
     "frame": true,
-    "toolbar":true
+    "toolbar":false
   },
   "scripts": {
     "start": "nw ."

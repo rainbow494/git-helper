@@ -27,6 +27,7 @@
 
 ## 调试方法
 - 打开```package.json``` 设置 ```toolbar:true```
+- 打开```main.js``` 设置 ```debug = true ```
 - 安装node-webkit ```npm install -g nw```
 - 打开命令行，进入```git-helper```目录，执行```nw src```
 - 在弹出窗体点击菜单按钮打开调试界面
