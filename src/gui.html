@@ -1,53 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body{
-            margin: 0;
-        }
-        .screen{
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: black;
-        }
-
-        .command-list button{
-            border-radius: 5px;
-            //width: 87vw;
-            height: 60px;
-            margin-bottom: 18px;
-            font-size: larger;
-        }
-
-        .command-list button.selected{
-            background-color: #0769ad;
-            color: white;
-        }
-
-        .project-list {
-            background-color:grey;
-        }
-
-        .project-list .selected{
-            background-color: #0769ad;
-            color: white;
-        }
-
-        #output-panel{
-
-            border-radius: 5px;
-
-            width:87vw;
-            height:212px;
-            border: 0;
-            padding: 0;
-        }
-    </style>
-    <script src="jquery.min.js"></script>
+    <link href="main.css" media="all" rel="stylesheet">
 </head>
 <body>
     <div class="screen">
@@ -63,116 +17,10 @@
             <button id="rebase" type="button" onclick="onCommandClick('rebase')">Rebase</button>
             <button id="log" type="button" onclick="onCommandClick('log')">Log</button> -->
         </div>
-        <button type="button" onclick="onRunClick()">Run</button>
+        <!-- <button type="button" onclick="onRunClick()">Run</button> -->
         <textarea id="output-panel"></textarea>
+        <script src="jquery.min.js"></script>
+        <script src="main.js"></script>
     </div>
-    <script>
-
-    var exec = require('child_process').exec;
-    var path = require('path');
-    var fs = require('fs');
-
-    var cmdTemp = [
-        'log',
-        'fetch',
-        'rebase'
-    ];
-
-    var projectTemp = [];
-
-
-    (function init() {
-
-        var data = fs.readFileSync('project.config', 'utf8');
-        projectTemp = data.replace(/^\s+|\s+$/g,'').split('\n');
-
-        var $commandContainer = $('.command-list');
-        cmdTemp.map(function (cmd) {
-            $btn = $('<button id="'+ cmd +'" type="button" onclick="onCommandClick(\''+ cmd +'\')">' + cmd + '</button>');
-            $commandContainer.append($btn);
-        })
-
-        var $projectContainer = $('.project-list ul');
-        projectTemp.map(function (project, idx) {
-            $item = $('<li id="' + idx + '" onclick="onSelectProject(\''+ idx +'\')">' + project + '</li>')
-            $projectContainer.append($item);
-        })
-
-    })();
-
-    var cmdSelected = [];
-    var projectSelected = [];
-
-    function onCommandClick(cmd) {
-        var btn = $('#' + cmd);
-        if (btn.hasClass('selected'))
-            btn.removeClass('selected');
-        else
-            btn.addClass('selected');
-
-        var $cmdList = $('.command-list .selected');
-        cmdSelected = $cmdList.map(function (idx, cmd) {
-            return cmd.id;
-        });
-    }
-
-    function onSelectProject(projectKey) {
-        var item = $('#' + projectKey);
-        if (item.hasClass('selected'))
-            item.removeClass('selected');
-        else
-            item.addClass('selected');
-
-        var $projectList = $('.project-list .selected');
-        projectSelected = $projectList.map(function (idx, project) {
-            return projectTemp[project.id];
-        });
-    }
-
-    function onRunClick() {
-        $(".output-panel").value = '';
-
-        projectSelected.map(function (i, project) {
-            cmdSelected.map(function (j, cmd) {
-                if (cmd === "fetch")
-                    fetch(project);
-                else
-                    execTortoiseGitProc(cmd, project)
-            });
-        });
-    }
-
-    function fetch(projectPath){
-        var command = 'git.exe fetch -v --progress "origin"'
-        execCmd(command, projectPath);
-    }
-
-    function execTortoiseGitProc(command, projectPath){
-        execCmd('tortoiseGitProc -command ' + command, projectPath)
-    }
-
-    function execCmd(command, projectPath){
-        var execPath = path.relative(process.cwd(), projectPath);
-
-        // solution need research, fetch cmd's output cannot be redirected!!!
-        // var child = execSync(command, {cwd:execPath, encoding: 'utf-8', stdio:[0,1,2]});
-        // console.log(child);
-
-        var child = exec(command, {cwd:execPath});
-
-        child.stdout.on('data', function(data) {
-          console.log('stdout: ' + data);
-        });
-        child.stderr.on('data', function(data) {
-          console.log('stdout: ' + data);
-          document.getElementById("output-panel").value += data;
-
-        });
-        child.on('close', function(code) {
-          console.log('closing code: ' + code);
-        });
-    }
-
-    </script>
 </body>
 </html>

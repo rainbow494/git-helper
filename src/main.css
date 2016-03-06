@@ -1,0 +1,78 @@
+body{
+    margin: 0;
+    font-family:monospace, sans-serif;
+}
+.screen{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.command-list{
+    display: flex;
+    margin-bottom: 18px;
+    width: 87vw;
+    justify-content: space-between;
+
+}
+
+.command-list button{
+    width: 25vw;
+    height: 50px;
+    border-radius: 5px;
+    font-size: larger;
+    font-family:monospace, sans-serif;
+}
+
+.command-list button.selected{
+    background-color: #0769ad;
+    color: white;
+}
+
+.project-list {
+    margin-bottom: 18px;
+    background-color:grey;
+    width:87vw;
+    border-radius: 5px;
+}
+
+.project-list ul {
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+}
+.project-list li {
+  list-style: none;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 2px solid #e7e7e7;
+  font-size: lager;
+}
+
+.project-list li:first-child {
+    border-radius: 5px 5px 0 0;
+}
+
+.project-list li:last-child {
+    border-bottom:none;
+    border-radius: 0 0 5px 5px;
+}
+
+.project-list .selected{
+    background-color: #337ab7;
+    color: white;
+}
+
+#output-panel{
+
+    border-radius: 5px;
+
+    width:87vw;
+    height:212px;
+    border: 0;
+    padding: 0;
+}

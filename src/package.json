@@ -3,6 +3,7 @@
   "main": "gui.html",
   "window":{
     "title": "Git Helper",
+    "icon": "ph_icon.png",
     "position": "center",
     "resizable": false,
     "width": 500,

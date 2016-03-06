@@ -3,11 +3,12 @@
 
 
 ## 界面截图
--
+![](https://github.com/rainbow494/git-helper/blob/master/screen-shot.png)
 
 ## 功能
-- 对多个git项目同时进行fetch-rebase
-- 打开git项目对应的log查看窗口
+- 对多项目fetch
+- 打开多项目rebase gui (tortoiseGit)
+- 打开多项目log gui (tortoiseGit)
 
 ## 部署依赖
 - tortoiseGit
@@ -19,15 +20,15 @@
 
 ## 打包运行方法
 - 在[官网](http://nwjs.io/)下载SDK
-- 将gui.html,package.json压缩为zip文件，然后更名为app.nw
-- 将app.nw复制到nw.exe所在安装目录下
-- 在命令行中执行 ```copy /b nw.exe+app.nw app.exe```建立exe文件
-- 修改bat下的config后，将bat文件夹和exe一起复制到目标目录，点击exe执行命令
+- 将src下project.config外所有文件, 压缩为zip文件后更名为git-helper.nw
+- 将git-helper.nw复制到nw.exe所在目录
+- 在命令行中执行 ```copy /b nw.exe+git-helper.nw git-helper.exe```建立exe文件
+- project.config修改后和exe一起复制到git所在盘符，点击exe执行命令
 
 ## 调试方法
 - 打开```package.json``` 设置 ```toolbar:true```
 - 安装node-webkit ```npm install -g nw```
-- 打开命令行，在```git-helper```下执行```nw src```
+- 打开命令行，进入```git-helper```目录，执行```nw src```
 - 在弹出窗体点击菜单按钮打开调试界面
 
 ## 参考资料
