@@ -28,6 +28,15 @@
             color: white;
         }
 
+        .project-list {
+            background-color:grey;
+        }
+
+        .project-list .selected{
+            background-color: #0769ad;
+            color: white;
+        }
+
         #output-panel{
 
             border-radius: 5px;
@@ -42,24 +51,26 @@
 </head>
 <body>
     <div class="screen">
-        <div class="command-list">
-            <button id="fetch" type="button" onclick="onCommandClick('fetch')">Fetch</button>
-            <button id="rebase" type="button" onclick="onCommandClick('rebase')">Rebase</button>
-            <button id="log" type="button" onclick="onCommandClick('log')">Log</button>
-        </div>
         <div class="project-list">
-
+            <ul>
+                <!-- <li id="1" onclick="onSelectProject('0')">'f:\\github\\git-helper'</li>
+                <li id="2" onclick="onSelectProject('1')">'f:\\github\\arch'</li>
+                <li id="3" onclick="onSelectProject('2')">'f:\\github\\lunch'</li> -->
+            </ul>
+        </div>
+        <div class="command-list">
+            <!-- <button id="fetch" type="button" onclick="onCommandClick('fetch')">Fetch</button>
+            <button id="rebase" type="button" onclick="onCommandClick('rebase')">Rebase</button>
+            <button id="log" type="button" onclick="onCommandClick('log')">Log</button> -->
         </div>
         <button type="button" onclick="onRunClick()">Run</button>
-        <!-- <textarea id="output-panel"></textarea> -->
+        <textarea id="output-panel"></textarea>
     </div>
     <script>
 
-    var project = [
-        'f:\\github\\git-helper',
-        'f:\\github\\arch',
-        'f:\\github\\lunch'
-    ];
+    var exec = require('child_process').exec;
+    var path = require('path');
+    var fs = require('fs');
 
     var cmdTemp = [
         'log',
@@ -67,7 +78,30 @@
         'rebase'
     ];
 
+    var projectTemp = [];
+
+
+    (function init() {
+
+        var data = fs.readFileSync('project.config', 'utf8');
+        projectTemp = data.replace(/^\s+|\s+$/g,'').split('\n');
+
+        var $commandContainer = $('.command-list');
+        cmdTemp.map(function (cmd) {
+            $btn = $('<button id="'+ cmd +'" type="button" onclick="onCommandClick(\''+ cmd +'\')">' + cmd + '</button>');
+            $commandContainer.append($btn);
+        })
+
+        var $projectContainer = $('.project-list ul');
+        projectTemp.map(function (project, idx) {
+            $item = $('<li id="' + idx + '" onclick="onSelectProject(\''+ idx +'\')">' + project + '</li>')
+            $projectContainer.append($item);
+        })
+
+    })();
+
     var cmdSelected = [];
+    var projectSelected = [];
 
     function onCommandClick(cmd) {
         var btn = $('#' + cmd);
@@ -82,15 +116,29 @@
         });
     }
 
+    function onSelectProject(projectKey) {
+        var item = $('#' + projectKey);
+        if (item.hasClass('selected'))
+            item.removeClass('selected');
+        else
+            item.addClass('selected');
+
+        var $projectList = $('.project-list .selected');
+        projectSelected = $projectList.map(function (idx, project) {
+            return projectTemp[project.id];
+        });
+    }
+
     function onRunClick() {
         $(".output-panel").value = '';
 
-        var projectPath = project[0];
-        cmdSelected.map(function(idx, cmd) {
-            if (cmd === "fetch")
-                fetch(projectPath);
-            else
-                execTortoiseGitProc(cmd, projectPath)
+        projectSelected.map(function (i, project) {
+            cmdSelected.map(function (j, cmd) {
+                if (cmd === "fetch")
+                    fetch(project);
+                else
+                    execTortoiseGitProc(cmd, project)
+            });
         });
     }
 
@@ -104,11 +152,25 @@
     }
 
     function execCmd(command, projectPath){
-        var execSync = require('child_process').execSync;
-        var path = require('path');
         var execPath = path.relative(process.cwd(), projectPath);
 
-        var child = execSync(command, {cwd:execPath, encoding: 'utf-8'});
+        // solution need research, fetch cmd's output cannot be redirected!!!
+        // var child = execSync(command, {cwd:execPath, encoding: 'utf-8', stdio:[0,1,2]});
+        // console.log(child);
+
+        var child = exec(command, {cwd:execPath});
+
+        child.stdout.on('data', function(data) {
+          console.log('stdout: ' + data);
+        });
+        child.stderr.on('data', function(data) {
+          console.log('stdout: ' + data);
+          document.getElementById("output-panel").value += data;
+
+        });
+        child.on('close', function(code) {
+          console.log('closing code: ' + code);
+        });
     }
 
     </script>
