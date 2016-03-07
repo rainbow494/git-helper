@@ -2,10 +2,10 @@
   "name": "git-helper",
   "main": "gui.html",
   "window":{
-    "title": "Git Helper",
+	  "title": "Git Helper",
     "icon": "ph_icon.png",
     "position": "center",
-    "resizable": false,
+    "resizable": true,
     "width": 500,
     "height": 500,
     "frame": true,
