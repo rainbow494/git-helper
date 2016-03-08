@@ -6,8 +6,8 @@
     "icon": "ph_icon.png",
     "position": "center",
     "resizable": true,
-    "width": 500,
-    "height": 500,
+    "width": 700,
+    "height": 770,
     "frame": true,
     "toolbar":false
   },

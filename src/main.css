@@ -14,10 +14,9 @@ body{
 
 .command-list{
     display: flex;
-    margin-bottom: 18px;
     width: 87vw;
     justify-content: space-between;
-
+    flex-wrap: wrap;
 }
 
 .command-list button{
@@ -26,6 +25,7 @@ body{
     border-radius: 5px;
     font-size: larger;
     font-family:monospace, sans-serif;
+    margin-bottom: 18px;
 }
 
 .command-list button.selected{

@@ -1,129 +1,159 @@
-var debug = false;
+var _debug_ = true;
 
 var exec = require('child_process').exec;
 var path = require('path');
 var fs = require('fs');
 
-var cmdTemp = [
-    'log',
-    'fetch',
-    'rebase'
+var bashCmdTemp = [
+'tortoiseGit_log',
+'git_fetch',
+'tortoiseGit_rebase',
+'win_explorer',
 ];
 
 var projectTemp = [];
-var cmdSelected = [];
+var bashCmdSelected = [];
 var projectSelected = [];
 
 function init() {
-    readProjectConfig();
+	readProjectConfig();
 
-    var $commandContainer = $('.command-list');
-    cmdTemp.map(function (cmd) {
-        $btn = $('<button id="'+ cmd +'" type="button" onclick="onCommandClick(\''+ cmd +'\')">' + cmd + '</button>');
-        $commandContainer.append($btn);
-    });
+	var $cmdContainer = $('.command-list');
+	bashCmdTemp.map(function (bashCmd) {
+		var cmd = parseBashCmd(bashCmd).cmd;
+		$btn = $('<button id="'+ bashCmd +'" data-bash-cmd="' + bashCmd + '" type="button">' + cmd + '</button>');
+		$btn.click(onCmdClick);
+		$cmdContainer.append($btn);
+	});
 
-    var $projectContainer = $('.project-list ul');
-    projectTemp.map(function (project, idx) {
-        $item = $('<li id="' + idx + '" onclick="onSelectProject(\''+ idx +'\')">' +
-            path.parse(project).name + ' - '+project + '</li>');
-        $projectContainer.append($item);
-    });
+	var $projectContainer = $('.project-list ul');
+	projectTemp.map(function (project, idx) {
+		$item = $('<li id="' + idx + '" onclick="onSelectProject(\''+ idx +'\')">' +
+			path.parse(project).name + ' - '+project + '</li>');
+		$projectContainer.append($item);
+	});
 }
 
 function readProjectConfig(){
-    var configPathTmp = 'project.config';
-    var data = '';
-    if (debug) {
-        configPath = configPathTmp;
-    }
-    else {
-        var nwPath = process.execPath;
-        var nwDir = path.dirname(nwPath);
-        configPath = path.normalize(nwDir + '\\' + configPathTmp);
-    }
+	var configPathTmp = 'project.config';
+	var data = '';
+	if (_debug_) {
+		configPath = configPathTmp;
+	}
+	else {
+		var nwPath = process.execPath;
+		var nwDir = path.dirname(nwPath);
+		configPath = path.normalize(nwDir + '\\' + configPathTmp);
+	}
 
     // try {
-        data = fs.readFileSync(configPath, 'utf8');
-        data.replace(/^\s+|\s+$/g,'').split('\r\n').map(function functionName(projectPath) {
-            projectTemp.push(path.normalize(projectPath));
-        });
+    	data = fs.readFileSync(configPath, 'utf8');
+    	data.replace(/^\s+|\s+$/g,'').split('\r\n').map(function functionName(projectPath) {
+    		projectTemp.push(path.normalize(projectPath));
+    	});
     // } catch (e) {
     //     console.log(e);
     // }
 }
 function onSelectProject(projectKey) {
-    var item = $('#' + projectKey);
-    if (item.hasClass('selected'))
-    item.removeClass('selected');
-    else
-    item.addClass('selected');
+	var item = $('#' + projectKey);
+	if (item.hasClass('selected'))
+		item.removeClass('selected');
+	else
+		item.addClass('selected');
 
-    var $projectList = $('.project-list .selected');
-    projectSelected = [];
-    $projectList.map(function (idx, project) {
-        return projectSelected.push(projectTemp[project.id]);
-    });
+	var $projectList = $('.project-list .selected');
+	projectSelected = [];
+	$projectList.map(function (idx, project) {
+		return projectSelected.push(projectTemp[project.id]);
+	});
 }
 
-function onCommandClick(cmd) {
+function onCmdClick() {
     // var btn = $('#' + cmd);
     // if (btn.hasClass('selected'))
     //     btn.removeClass('selected');
     // else
     //     btn.addClass('selected');
     //
-    // cmdSelected = [];
+    // bashCmdSelected = [];
     // var $cmdList = $('.command-list .selected');
     // $cmdList.map(function (idx, cmd) {
-    //     return cmdSelected.push(cmd.id);
+    //     return bashCmdSelected.push(cmd.id);
     // });
-    cmdSelected = [cmd];
-    console.log(cmdSelected);
+    bashCmd = $(this).data('bash-cmd');
+    bashCmdSelected = [bashCmd];
+    //console.log(bashCmdSelected);
     onRunClick();
 }
 
 function onRunClick() {
-    $(".output-panel").value = '';
+	$(".output-panel").value = '';
 
-    projectSelected.map(function (project) {
-        cmdSelected.map(function (cmd) {
-            if (cmd === "fetch")
-            fetch(project);
-            else
-            execTortoiseGitProc(cmd, project);
-        });
-    });
+	projectSelected.map(function (project) {
+		bashCmdSelected.map(function (bashCmd) {
+			var bashCmdEntity = parseBashCmd(bashCmd);
+			var bash = bashCmdEntity.bash;
+			var cmd = bashCmdEntity.cmd;
+			switch(bash)
+			{
+				case ('win'):
+				win(cmd, project);
+				break;
+				case ('git'):
+				git(cmd, project);
+				break;
+				case ('tortoiseGit'):
+				execTortoiseGitProc(cmd, project);
+				break;
+				default:
+				break;
+			}
+		});
+	});
 }
 
-function fetch(projectPath){
-    var command = 'git.exe fetch -v --progress "origin"';
-    execCmd(command, projectPath);
+function parseBashCmd(bashCmd){
+	return {
+		bash:bashCmd.split('_')[0],
+		cmd:bashCmd.split('_')[1]
+	}
 }
 
-function execTortoiseGitProc(command, projectPath){
-    execCmd('tortoiseGitProc -command ' + command, projectPath);
+function win(cmd, projectPath){
+	cmd = cmd + " " + projectPath;
+	execCmd(cmd, projectPath);
 }
 
-function execCmd(command, projectPath){
-    var execPath = path.relative(process.cwd(), projectPath);
+function git(cmd, projectPath){
+	cmd = 'git '+ cmd +' -v --progress "origin"';
+	execCmd(cmd, projectPath);
+}
+
+function execTortoiseGitProc(cmd, projectPath){
+	cmd = 'tortoiseGitProc -command ' + cmd;
+	execCmd(cmd, projectPath);
+}
+
+function execCmd(cmd, projectPath){
+	var execPath = path.relative(process.cwd(), projectPath);
 
     // solution need research, fetch cmd's output cannot be redirected!!!
-    // var child = execSync(command, {cwd:execPath, encoding: 'utf-8', stdio:[0,1,2]});
+    // var child = execSync(cmd, {cwd:execPath, encoding: 'utf-8', stdio:[0,1,2]});
     // console.log(child);
-
-    var child = exec(command, {cwd:execPath});
-
+    
+    var child = exec(cmd, {cwd:execPath});
+    
     child.stdout.on('data', function(data) {
-        console.log('stdout: ' + data);
+    	console.log('stdout: ' + data);
     });
     child.stderr.on('data', function(data) {
-        console.log('stdout: ' + data);
-        document.getElementById("output-panel").value += data;
+    	console.log('stdout: ' + data);
+    	document.getElementById("output-panel").value += data;
 
     });
     child.on('close', function(code) {
-        console.log('closing code: ' + code);
+    	console.log('closing code: ' + code);
     });
 }
 
