@@ -88,7 +88,6 @@ function onCmdClick() {
 }
 
 function onRunClick() {
-	$(".output-panel").value = '';
 
 	projectSelected.map(function (project) {
 		bashCmdSelected.map(function (bashCmd) {
@@ -126,7 +125,12 @@ function win(cmd, projectPath){
 }
 
 function git(cmd, projectPath){
-	cmd = 'git '+ cmd +' -v --progress "origin"';
+
+	var $outputPanel = $("#output-panel");
+	$outputPanel[0].value += "-----------git cmd output--------------\n";
+	$outputPanel. scrollTop($outputPanel[0].scrollHeight);
+	
+	cmd = "git "+ cmd +" -v --progress origin";
 	execCmd(cmd, projectPath);
 }
 
@@ -149,7 +153,7 @@ function execCmd(cmd, projectPath){
     });
     child.stderr.on('data', function(data) {
     	console.log('stdout: ' + data);
-    	document.getElementById("output-panel").value += data;
+    	$("#output-panel")[0].value += data;
 
     });
     child.on('close', function(code) {

@@ -19,11 +19,11 @@
 
 ## windows平台打包方法
 - 在[官网](http://nwjs.io/)下载SDK
-- 将```src```下```project.config```外所有文件, ```压缩为zip文件```并更名为```git-helper.nw```
+- 将```src/project.template.config外```所有文件, ```压缩为zip文件```并更名为```git-helper.nw```
 - 将```git-helper.nw```复制到```SDK解压目录```
 - 打开命令行，进入```SDK解压目录```，执行```copy /b nw.exe+git-helper.nw git-helper.exe```建立exe文件
-- 将```src下project.config```，```git-helper.exe```以及SDK下的```icudtl.dat，libGLESv2.dll，nw.pak```一起复制到git所在盘符
-- 修改```project.cong```，点击exe执行命令
+- 将```src/project.template.config```，```git-helper.exe```以及SDK下的```icudtl.dat，libGLESv2.dll，nw.pak```一起复制到git所在盘符
+- 将```project.template.config```改名为```project.config```并修改配置，点击exe执行命令
 - 其他平台打包方法[详见这里](https://github.com/nwjs/nw.js/wiki/how-to-package-and-distribute-your-apps)
 
 ## 调试方法
